@@ -12,13 +12,13 @@ try {
     
     $conn->beginTransaction();
     
-    // Clear existing data
+   
     $conn->exec("DELETE FROM tbl_voucher");
     $conn->exec("DELETE FROM tbl_user_recharges");
     $conn->exec("DELETE FROM tbl_plans");
     $conn->exec("DELETE FROM tbl_users");
     
-    // Insert users as per requirements
+    
     $users = [
         [
             'username' => 'superadmin',
@@ -111,19 +111,19 @@ try {
         $userIds[$user['username']] = $conn->lastInsertId();
     }
     
-    // Update sales users with correct agent ID
+   
     $agent1Id = $userIds['agent1'];
     $agent2Id = $userIds['agent2'];
     
-    // Assign sales1 and sales2 to agent1
+   
     $stmt = $conn->prepare("UPDATE tbl_users SET root = ? WHERE username IN ('sales1', 'sales2')");
     $stmt->execute([$agent1Id]);
     
-    // Assign sales3 to agent2
+    
     $stmt = $conn->prepare("UPDATE tbl_users SET root = ? WHERE username = 'sales3'");
     $stmt->execute([$agent2Id]);
     
-    // Insert 3 plans with mixed enabled and type values as per requirements
+   
     $plans = [
         [
             'name_plan' => 'Basic Prepaid Plan',
@@ -164,7 +164,7 @@ try {
         $planIds[] = $conn->lastInsertId();
     }
     
-    // Insert sample recharges for testing permissions
+    
     $recharges = [
         [
             'customer_id' => $userIds['sales1'],
