@@ -70,15 +70,13 @@ class AuthHelper {
         
         $hierarchy = [$user];
         
-        // If user has a root, get the root user
         if ($user['root']) {
             $rootUser = $this->getUserById($user['root']);
             if ($rootUser) {
                 $hierarchy[] = $rootUser;
             }
         }
-        
-        // Get users under this user (for agents and sales)
+    
         if ($user['user_type'] === 'Agent' || $user['user_type'] === 'SuperAdmin' || $user['user_type'] === 'Admin') {
             $stmt = $this->db->prepare("SELECT * FROM tbl_users WHERE root = ? ORDER BY user_type, fullname");
             $stmt->execute([$userId]);
