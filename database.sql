@@ -3,7 +3,6 @@
 CREATE DATABASE IF NOT EXISTS isp_billing;
 USE isp_billing;
 
--- Users table - exact specification
 CREATE TABLE tbl_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -17,7 +16,6 @@ CREATE TABLE tbl_users (
     FOREIGN KEY (root) REFERENCES tbl_users(id) ON DELETE SET NULL
 );
 
--- Plans table - exact specification
 CREATE TABLE tbl_plans (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name_plan VARCHAR(100) NOT NULL,
@@ -27,7 +25,6 @@ CREATE TABLE tbl_plans (
     enabled BOOLEAN DEFAULT TRUE
 );
 
--- User recharges table - exact specification
 CREATE TABLE tbl_user_recharges (
     id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT NOT NULL,
@@ -41,7 +38,6 @@ CREATE TABLE tbl_user_recharges (
     FOREIGN KEY (plan_id) REFERENCES tbl_plans(id) ON DELETE CASCADE
 );
 
--- Voucher table - exact specification
 CREATE TABLE tbl_voucher (
     id INT AUTO_INCREMENT PRIMARY KEY,
     id_plan INT NOT NULL,
@@ -53,7 +49,6 @@ CREATE TABLE tbl_voucher (
     FOREIGN KEY (generated_by) REFERENCES tbl_users(id) ON DELETE CASCADE
 );
 
--- Indexes for better performance
 CREATE INDEX idx_users_username ON tbl_users(username);
 CREATE INDEX idx_users_type ON tbl_users(user_type);
 CREATE INDEX idx_users_root ON tbl_users(root);
