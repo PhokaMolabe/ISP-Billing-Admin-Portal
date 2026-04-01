@@ -24,10 +24,8 @@ class SettingsController extends BaseController {
                 die('You do not have permission to access this page');
             }
             
-            // Check permission with exact denial message
             PermissionHelper::requireUserEditPermission($currentUser, $targetUser);
-            
-            // Get available agents for dropdown (if current user can assign agents)
+          
             $availableAgents = [];
             if ($currentUser['user_type'] === USER_TYPE_SUPERADMIN || $currentUser['user_type'] === USER_TYPE_ADMIN) {
                 $stmt = $this->db->prepare("SELECT id, fullname FROM tbl_users WHERE user_type = ? AND status = 'active' ORDER BY fullname");
@@ -71,14 +69,11 @@ class SettingsController extends BaseController {
                 die('You do not have permission to access this page');
             }
             
-            // Re-check permission on POST with exact denial message
             PermissionHelper::requireUserEditPermission($currentUser, $targetUser);
             
-            // Validate input
             $data = $this->sanitizeInput($_POST);
             $errors = [];
             
-            // Validate profile fields
             if (empty($data['fullname'])) {
                 $errors['fullname'] = 'Full name is required';
             }
@@ -90,8 +85,7 @@ class SettingsController extends BaseController {
             if (!empty($data['phone']) && !$this->validatePhone($data['phone'])) {
                 $errors['phone'] = 'Invalid phone number';
             }
-            
-            // Validate credential fields 
+   
             if (!empty($data['new_password'])) {
                 if (strlen($data['new_password']) < 6) {
                     $errors['new_password'] = 'Password must be at least 6 characters';
@@ -103,7 +97,7 @@ class SettingsController extends BaseController {
             }
             
             if (!empty($errors)) {
-                // Get available agents
+            
                 $availableAgents = [];
                 if ($currentUser['user_type'] === USER_TYPE_SUPERADMIN || $currentUser['user_type'] === USER_TYPE_ADMIN) {
                     $stmt = $this->db->prepare("SELECT id, fullname FROM tbl_users WHERE user_type = ? AND status = 'active' ORDER BY fullname");
@@ -121,7 +115,6 @@ class SettingsController extends BaseController {
                 return;
             }
             
-            // Update user profile
             $stmt = $this->db->prepare("
                 UPDATE tbl_users 
                 SET fullname = ?, phone = ?, email = ?, status = ?
@@ -135,15 +128,13 @@ class SettingsController extends BaseController {
                 $data['status'] ?? 'active',
                 $userId
             ]);
-            
-            // Update password if provided
+
             if (!empty($data['new_password'])) {
                 $passwordHash = password_hash($data['new_password'], PASSWORD_BCRYPT);
                 $stmt = $this->db->prepare("UPDATE tbl_users SET password_hash = ? WHERE id = ?");
                 $stmt->execute([$passwordHash, $userId]);
             }
-            
-            // Update root/agent assignment (SuperAdmin & Admin Only)
+     
             if (($currentUser['user_type'] === USER_TYPE_SUPERADMIN || $currentUser['user_type'] === USER_TYPE_ADMIN) && 
                 isset($data['root'])) {
                 $stmt = $this->db->prepare("UPDATE tbl_users SET root = ? WHERE id = ?");
@@ -175,11 +166,10 @@ class SettingsController extends BaseController {
         }
         
         try {
-            // Get all users
+           
             $stmt = $this->db->query("SELECT * FROM tbl_users ORDER BY user_type, fullname");
             $users = $stmt->fetchAll();
             
-            // Get agents for display
             $stmt = $this->db->prepare("SELECT id, fullname FROM tbl_users WHERE user_type = ? ORDER BY fullname");
             $stmt->execute([USER_TYPE_AGENT]);
             $agents = $stmt->fetchAll();
