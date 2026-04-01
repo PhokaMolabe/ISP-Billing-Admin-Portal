@@ -18,13 +18,10 @@ class BaseController {
     protected function render($view, $data = []) {
         extract($data);
         
-        // Include header
         include 'views/layout/header.php';
-        
-        // Include the specific view
+       
         include "views/{$view}.php";
         
-        // Include footer
         include 'views/layout/footer.php';
     }
     
@@ -64,7 +61,7 @@ class BaseController {
     }
     
     protected function validatePhone($phone) {
-        //Phone validation 
+        
         return preg_match('/^[\d\s\-\+\(\)]+$/', $phone);
     }
 }
