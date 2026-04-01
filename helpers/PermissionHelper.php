@@ -5,7 +5,7 @@ require_once 'config/config.php';
 class PermissionHelper {
 
     public static function canEditPlan($user, $plan, $db = null) {
-        // SuperAdmin, Admin, and Sales can edit any plan
+        
         if ($user['user_type'] === USER_TYPE_SUPERADMIN || 
             $user['user_type'] === USER_TYPE_ADMIN || 
             $user['user_type'] === USER_TYPE_SALES) {
@@ -67,8 +67,6 @@ class PermissionHelper {
     
     
     public static function isInUserTree($userId, $resource, $db = null) {
-        // Check if the resource belongs to the user's tree
-        // For plans, we need to check if any recharge records link to users in the tree
         
         if (!$db) {
             $database = new Database();
