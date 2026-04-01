@@ -220,7 +220,6 @@ try {
         ]);
     }
     
-    // Insert sample vouchers
     $vouchers = [
         [
             'id_plan' => $planIds[0],
