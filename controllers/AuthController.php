@@ -5,7 +5,7 @@ require_once 'BaseController.php';
 class AuthController extends BaseController {
     
     public function login() {
-        // If already logged in, redirect to dashboard
+        
         if ($this->auth->isLoggedIn()) {
             $this->redirect('dashboard');
         }
